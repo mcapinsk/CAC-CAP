@@ -1,0 +1,30 @@
+==========Table 1==========
+x+y
+y+sin(2*pi*(x+y))
+========
+x+y
+y+(1+(-1)*sin(2*pi*(x+y)))*sin(2*pi*(x+y))
+========
+x+y
+y+cos(sin(2*pi*(x+y)))^(-1)*sin(sin(2*pi*(x+y)))
+========
+x+y
+y+3*log(2+sin(2*pi*(x+y)))
+========
+x+y
+(-1)+y+exp(sin(2*pi*(x+y)))
+==========Table 2==========
+x+sin(2*pi*y)
+y+sin(2*pi*(x+sin(2*pi*y)))
+========
+x+sin(2*pi*y)
+y+(1+(-1)*sin(2*pi*(x+sin(2*pi*y))))*sin(2*pi*(x+sin(2*pi*y)))
+========
+x+sin(2*pi*y)
+y+cos(sin(2*pi*(x+sin(2*pi*y))))^(-1)*sin(sin(2*pi*(x+sin(2*pi*y))))
+========
+x+sin(2*pi*y)
+y+3*log(2+sin(2*pi*(x+sin(2*pi*y))))
+========
+x+sin(2*pi*y)
+(-1)+y+exp(sin(2*pi*(x+sin(2*pi*y))))
