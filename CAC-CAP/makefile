@@ -5,12 +5,12 @@ PROGS = CAC-CAP
 OTHERS = validatedTrajectory conservativeMap dissipativeMap nonTwistSF plots
 
 # directory where capd scripts are (e.g. capd-config)
-CAPDBINDIR = ~/CAPD/build/bin/
+CAPDBINDIR = ../build/bin/
 
 # setting compiler and linker flags
 CAPDFLAGS = `${CAPDBINDIR}capd-config --cflags`
-CAPDLIBS = `${CAPDBINDIR}capd-config --libs` -lomp
-CXXFLAGS += ${CAPDFLAGS} -O2 -Wall -std=c++17 -Xpreprocessor -fopenmp
+CAPDLIBS = `${CAPDBINDIR}capd-config --libs` -lgomp
+CXXFLAGS += ${CAPDFLAGS} -O2 -Wall -std=c++17 -fopenmp
 
 # directory where object and dependancy files will be created
 OBJDIR = .obj/
