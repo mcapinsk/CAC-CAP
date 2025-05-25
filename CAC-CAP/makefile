@@ -1,5 +1,5 @@
 # a list of all the programs in your project
-PROGS = main
+PROGS = CAC-CAP
 
 # a list of all your units to be linked with your programs (space separated)
 OTHERS = validatedTrajectory conservativeMap dissipativeMap nonTwistSF plots
