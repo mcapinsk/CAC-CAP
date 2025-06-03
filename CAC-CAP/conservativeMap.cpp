@@ -2,6 +2,8 @@
 #include "validatedTrajectory.h"
 #include "utils.h"
 
+// This routine returns the formuale of conservative maps considered
+// in the paper.
 string mapFormula(int i)
 {
 	// Below formulae were generated in:
@@ -31,26 +33,41 @@ string mapFormula(int i)
 	return "x+sin(2*pi*y),-1+y+exp(sin(2*pi*(x+sin(2*pi*y))))+c";
 }
 
+// This routine computes the integral of v(sin(2*pi*x))−c.
+// It is used to find the constant c for the considered function v.
 interval integral(int i)
 {
+	// in these cases c=0
 	if((i==0) or (i==2) or (i==5) or (i==7)) return interval(0);
+
+	// in these cases c=1/2
 	if((i==1) or (i==6)) return -interval(1)/interval(2);
-	IMap g;
-	if((i==3) or (i==8)) g=IMap("par:pi;var:x;fun:3*log(2+sin(2*pi*x));");
-	if((i==4) or (i==9)) g=IMap("par:pi;var:x;fun:exp(sin(2*pi*(x)))-1;");
-	g.setParameter("pi",interval::pi());
+
+	IMap w;
+	if((i==3) or (i==8)) w=IMap("par:pi;var:x;fun:3*log(2+sin(2*pi*x));");
+	if((i==4) or (i==9)) w=IMap("par:pi;var:x;fun:exp(sin(2*pi*(x)))-1;");
+	w.setParameter("pi",interval::pi());
 	int N=100000;
 	interval Integral(0);
 	for(int i=0;i<N;i++)
 	{
 		interval x(0,1);
 		x=part(x,N,i);
-		Integral=Integral+g(IVector({x}))[0]*(x.right()-x.left());
+		Integral=Integral+w(IVector({x}))[0]*(x.right()-x.left());
 	}
 	return Integral;
 }
 
-vector<DVector> findShortestTrajectory(DMap &f,double B,int N,int max_n)
+/////////////////////////////////
+// This function considers N points on y=-B and finds a 
+// shortest trajectory going above B.
+//
+// Note: the function always returns some sequence of points,
+// but if the length is equal to max_n, then such
+// trajectory does not go above B. This is not a problem,
+// since each trajectory is additionally validated in 
+// validateChaosInConservativeMaps().
+vector<DVector> findShortestTrajectoryUp(DMap &f,double B,int N,int max_n)
 {
 	int shortest_path=max_n;
 	int best_i=0;
@@ -80,11 +97,14 @@ vector<DVector> findShortestTrajectory(DMap &f,double B,int N,int max_n)
 	return q;
 }
 
-vector<DVector> findShortestTrajectory(DMap &f,double B)
+// We choose default N=10000 and n_max=100 to search for 
+// trajectories which go up in validateChaosInConservativeMaps().
+vector<DVector> findShortestTrajectoryUp(DMap &f,double B)
 {
-	return findShortestTrajectory(f,B,10000,100);
+	return findShortestTrajectoryUp(f,B,10000,100);
 }
 
+// This is a technical function, used just for plots:
 void plotTrajectory(vector<DVector> q,int i)
 {
 	ofstream file("plots/conservative"+to_string(i)+".txt");
@@ -92,18 +112,27 @@ void plotTrajectory(vector<DVector> q,int i)
 	file.close();
 }
 
+// This is the theorem in which we validate Theorem 1.2.
 void validateChaosInConservativeMaps()
 {
 	for(int i=0;i<10;i++)
 	{
 		if(i==0) cout << "======== Table 1 ========" << endl;
 		if(i==5) cout << "======== Table 2 ========" << endl;
-		interval Int=integral(i);
+		interval Int=integral(i); // this is -c
+
+		// The DMap (double map) is used to find a candidate
+		// for the trajectory.
 		DMap f("par:pi,c;var:x,y;fun:"+mapFormula(i)+";");
 		f.setParameter("pi",4.0*atan(1.0));
 		f.setParameter("c",-Int.mid().leftBound());
+
+		// We take B=5
 		interval B(5.0);
-		vector<DVector> q=findShortestTrajectory(f,B.leftBound());
+
+		// This is the candidate for a trajectory going from
+		// y=-B to above y=B.
+		vector<DVector> q=findShortestTrajectoryUp(f,B.leftBound());
 
 		plotTrajectory(q,i);
 		bool result;
@@ -119,11 +148,13 @@ void validateChaosInConservativeMaps()
 			IMap F("par:pi,c;var:x,y;fun:"+mapFormula(i)+";");
 			F.setParameter("pi",interval::pi());
 			F.setParameter("c",-Int);
-			interval h0;
+			interval h0=interval(0.0);
 
 			result=validateTrajectoryUp(q,q_validated,B,F,q0,v0,h0);
+			// if the trajectory is validated the result is set to 1.
 		}else
 		{
+			// the proof failed.
 			result=0;
 		}
 		cout << i % 5 +1 << ". Chaos in the conservative map: (" << mapFormula(i) << ") validated." << endl;

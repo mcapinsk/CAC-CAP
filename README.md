@@ -35,11 +35,42 @@ http://capd.ii.uj.edu.pl/html/capd_compilation.html
 
 ## Building and running the Arnold diffusion proof
 
-To compile and run the full proof of Arnold diffusion execute:
+To compile execute:
 
     cd ../CAC-CAP
     make
-    ./CAC-CAP
+
+0 To run the proof of Theorem 1.2 call
+
+    ./CAC-CAP 0
+
+1 To run the proof of Theorem 1.3 using an N x N mesh call
+
+    ./CAC-CAP 1 N
+
+with N chosen as an integer. To produce the plot from the paper we have called
+
+    ./CAC-CAP 1 1000
+
+such computation took three hours running on parallel 48 threads.
+
+2 To run the proof of Theorem 1.4 choose k from 0 to 3 and call
+
+    ./CAC-CAP 2 k
+
+To produce the plot from the paper we have called
+
+    ./CAC-CAP 2 3
+
+For different k we obtain different accuracy:
+
+0 gives a short computation and should validate 0.4 of the area.
+
+1 should result in couple of minutes long computation and should validate 0.67 of the area. 
+
+2 should take an hour or two on a desktop computer and should validate 0.88 of the area. 
+
+3 should validate 0.98 of the area. This is best done on a cluster, or overnight on a good desktop computer.
 
 
 ## Results
@@ -51,11 +82,18 @@ CAC-CAP/CAC-CAP/plots
 
 ## Suggested order of reading the files
 
-- 
--
+- validatedTrajectory.h/cpp
+These files contain a method for validating that a strategy goes above or below a prescribed level. The validation is performed by means of the Krawczyk parallel shooting method.
+
+- conservativeMap.h/cpp
+These files contain a computer assisted proof of chaos for conservative maps. The routine validateChaosInConservativeMaps() provides a computer assisted proof of Theorem 1.2 from the paper.
+
+- nonTwistSF.h/cpp
+These files contain a computer assisted proof of Theorem 1.3. from the paper. 
+
 
 ## Authorship
 
-Only the contents of the folder CAC-CAP/CAC-CAP constitute the proof of Arnold diffusion in the 3bp, and the files included there have been written by Maciej J. Capinski. The remaining files are part of the CAPD library. These have been created by the CAPD Group.
+Only the contents of the folder CAC-CAP/CAC-CAP constitute the proof from the paper, and the files included there have been written by Maciej J. Capinski. The remaining files are part of the CAPD library. These have been created by the CAPD Group.
 
 

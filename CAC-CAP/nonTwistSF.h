@@ -10,8 +10,12 @@ using namespace capd::alglib;
 using namespace capd::vectalg;
 using namespace capd::matrixAlgorithms;
 
-interval diffusionAreaNonTwistSF(interval A,interval B,int N_search,int max_n);
-bool diffusionInNonTwistSFNonRigorous(interval A,interval B,int N_search,int max_n);
-bool diffusionInNonTwistSF(interval a,interval b,int N_search,int &max_n);
+// This function validates Theorem 1.3 for a given choice of a
+// parameter pair (a,b). The method is essentially the same as 
+// the one from conservativeMap.h/cpp. We create a different function
+// since due the number of parameter pairs we want to parallelise 
+// the computation. In order to do this we pass the maps by reference,
+// so that each thread uses differnt map objects.
 bool diffusionInNonTwistSF(DMap &f,IMap &F,interval a,interval b,int N_search,int max_n);
+
 #endif
