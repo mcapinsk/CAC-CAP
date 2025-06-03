@@ -33,7 +33,7 @@ For detailed description on how to build the library see
 
 http://capd.ii.uj.edu.pl/html/capd_compilation.html
 
-## Building and running the Arnold diffusion proof
+## Building and running the proofs
 
 To compile execute:
 
@@ -52,13 +52,13 @@ with N chosen as an integer. To produce the plot from the paper we have called
 
     ./CAC-CAP 1 1000
 
-such computation took three hours running on parallel 48 threads.
+such computation took three hours running on 48 parallel threads.
 
 2 To run the proof of Theorem 1.4 choose k from 0 to 3 and call
 
     ./CAC-CAP 2 k
 
-To produce the plot from the paper we have called
+For the result from the paper we have called
 
     ./CAC-CAP 2 3
 
@@ -71,7 +71,6 @@ For different k we obtain different accuracy:
 2 should take an hour or two on a desktop computer and should validate 0.88 of the area. 
 
 3 should validate 0.98 of the area. This is best done on a cluster, or overnight on a good desktop computer.
-
 
 ## Results
 
