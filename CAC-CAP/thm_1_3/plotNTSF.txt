@@ -1,0 +1,60 @@
+set xrange [0:1]
+set xtics 0,0.2,1
+set yrange [0:1]
+set ytics 0,0.2,1 
+
+plot \
+'NTSF_proof_0.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_1.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_2.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_3.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_4.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_5.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_6.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_7.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_8.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_9.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_10.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_11.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_12.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_13.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_14.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_15.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_16.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_17.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_18.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_19.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_20.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_21.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_22.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_23.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_24.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_25.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_26.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_27.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_28.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_29.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_30.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_31.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_32.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_33.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_34.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_35.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_36.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_37.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_38.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_39.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_40.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_41.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_42.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_43.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_44.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_45.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_46.txt' lw 1.3 lc rgb 'red' w d t '', \
+'NTSF_proof_47.txt' lw 1.3 lc rgb 'red' w d t '', \
+
+set terminal postscript eps enhanced size 2.0in,2.0in color font 'Helvetica,12' 
+set output 'Fig-ntsf.eps'
+replot
+set terminal qt
+reset

@@ -18,7 +18,7 @@ bool diffusionInNonTwistSF(DMap &f,IMap &F,interval a,interval b,int N_search,in
 	// We find a non-rogorous candidate for a trajectory which goes up
 	vector<DVector> q=findShortestTrajectoryUp(f,B.leftBound(),N_search,max_n);
 
-	if(q.size()>=max_n) return 0;
+	if((int)q.size()>=max_n) return 0;
 	
 	F.setParameter("a",a);
 	F.setParameter("b",b);

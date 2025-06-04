@@ -297,8 +297,8 @@ bool validateChaos(IDissipativeMap &F,DDissipativeMap &Fd,chaosProofParameters p
 		
 		// We check the largest number of iterates needed. This is just out of curiosity.
 		// This is not essential for the proof.
-		if(NofIterates<qU.size()-1) NofIterates=qU.size()-1;
-		if(NofIterates<qD.size()-1) NofIterates=qD.size()-1;
+		if(NofIterates<(int)qU.size()-1) NofIterates=qU.size()-1;
+		if(NofIterates<(int)qD.size()-1) NofIterates=qD.size()-1;
 
 		// We compute the local coordinates dor the local map
 		IMatrix A=toInterval(getLocalCoordinates(Fd,i));

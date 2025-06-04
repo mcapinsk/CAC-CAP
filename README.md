@@ -50,7 +50,7 @@ To compile execute:
 
 with N chosen as an integer. To produce the plot from the paper we have called
 
-    ./CAC-CAP 1 1000
+    nohup ./CAC-CAP 1 1000 > thm_1_3.txt
 
 such computation took three hours running on 48 parallel threads.
 
@@ -60,25 +60,29 @@ such computation took three hours running on 48 parallel threads.
 
 For the result from the paper we have called
 
-    ./CAC-CAP 2 3
+    nohup ./CAC-CAP 2 3 > thm_1_4.txt
 
-For different k we obtain different accuracy:
+For different k we can obtain different accuracy:
 
-k=0 gives a short computation and should validate 0.4 of the area.
+k=0 gives a short computation and should validate 0.28 of the area.
 
-k=1 should result in couple of minutes long computation and should validate 0.67 of the area. 
+k=1 should result in couple of minutes long computation and should validate 0.69 of the area. 
 
-k=2 should take an hour or two on a desktop computer and should validate 0.88 of the area. 
+k=2 should take an hour or two on a desktop computer and should validate 0.92 of the area. 
 
 k=3 should validate 0.98 of the area. This is best done on a cluster, or overnight on a good desktop computer.
 
 ## Results
 
-During the computation the results are stored in the folder:
+The results for Theorems 1.2 and 1.4 will be written out in terminal. The results for Theorem 1.3 are stored in the folder:
 
-CAC-CAP/CAC-CAP/results
+CAC-CAP/CAC-CAP/thm_1_3 
 
-CAC-CAP/CAC-CAP/plots
+which contains the gnuplot files. The plot can be made by calling 
+
+    load 'plotNTSF.txt'
+
+from gnuplot.
 
 ## Suggested order of reading the files
 
@@ -91,6 +95,8 @@ These files contain a computer assisted proof of chaos for conservative maps. Th
 - nonTwistSF.h/cpp
 These files contain a computer assisted proof of Theorem 1.3. from the paper. 
 
+- dissipativeMap.h/cpp
+These files contain the proof of Theorem 1.4.
 
 ## Authorship
 

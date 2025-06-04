@@ -108,7 +108,7 @@ vector<DVector> findShortestTrajectoryUp(DMap &f,double B)
 void plotTrajectory(vector<DVector> q,int i)
 {
 	ofstream file("plots/conservative"+to_string(i)+".txt");
-	for(int k=0;k<q.size();k++) file << q[k][0] << " " << q[k][1] << endl;
+	for(int k=0;k<(int)q.size();k++) file << q[k][0] << " " << q[k][1] << endl;
 	file.close();
 }
 

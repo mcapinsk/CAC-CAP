@@ -16,7 +16,7 @@ using namespace capd::matrixAlgorithms;
 
 void producePlotFile(int n_of_threads)
 {
-	ofstream file("plots/plotNTSF.txt");
+	ofstream file("thm_1_3/plotNTSF.txt");
 	file << "set xrange [0:1]" << endl;
 	file << "set xtics 0,0.2,1" << endl;
 	file << "set yrange [0:1]" << endl;
@@ -41,7 +41,7 @@ void validateDiffusionNoTwistSF(int Mesh_Size)
 
 	int Na=Mesh_Size;
 	int Nb=Na;
-	int N_search=10000;
+	int N_search=2000;
 	int max_n=300;
 	
 	int N_of_threads=omp_get_max_threads();
@@ -54,7 +54,7 @@ void validateDiffusionNoTwistSF(int Mesh_Size)
 	vector<int> counter(N_of_threads);
 	for(int i=0;i<N_of_threads;i++)
 	{
-		file[i].open("plots/NTSF_proof_"+to_string(i)+".txt");
+		file[i].open("thm_1_3/NTSF_proof_"+to_string(i)+".txt");
 		a[i]=interval(0);
 		b[i]=interval(0);
 		f[i]=new IMap("par:pi,a,b;var:x,y;fun:x+a*(1-(y-b*sin(2*pi*x))^2),y-b*sin(2*pi*x);");
@@ -66,6 +66,7 @@ void validateDiffusionNoTwistSF(int Mesh_Size)
 
 	int i;
 	int done=0;
+	cout << "progress (the program will finish at 1.0): " << endl;
 	#pragma omp parallel for private(i)
 	for(i=0;i<Na;i++)
 	{
@@ -174,15 +175,12 @@ void ProofOfTheorem_1_3(int N)
 void ProofOfTheorem_1_4(int accuracy)
 {
 	auto start = chrono::high_resolution_clock::now(); // Start time
-	ofstream resultFile("results/StandardMapResult.txt");
-	resultFile.precision(15);
 	
 	validateChaosInStandardMapCluster(accuracy);
 
 	auto end = chrono::high_resolution_clock::now(); // End time
   	chrono::duration<double> duration = end - start;
   	cout << "Execution time: " << duration.count() << " seconds" << endl;
-  	resultFile << "Execution time: " << duration.count() << " seconds" << endl;
 }
 
 int main(int argc, char* argv[])
@@ -190,8 +188,10 @@ int main(int argc, char* argv[])
 	cout.precision(10);
 	try
 	{	
-		if((argc==1) or ((argc==2) and (argv[1]==0))) 
+		if((argc==1) or (argc==2 and std::atoi(argv[1])==0))
+		{ 
 			ProofOfTheorem_1_2();
+		}
 		
 		if(argc==3) 
   		{
