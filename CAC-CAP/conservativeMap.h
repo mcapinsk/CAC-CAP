@@ -11,7 +11,7 @@ using namespace capd::vectalg;
 using namespace capd::matrixAlgorithms;
 
 // This routine provides a computer assisted proof of Theorem 1.2 
-// from the paper.
+// from the paper. 
 void validateChaosInConservativeMaps();
 
 // This routine finds a trajectory which goes from level y=-B to

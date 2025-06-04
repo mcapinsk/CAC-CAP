@@ -3,7 +3,6 @@
 #include "validatedTrajectory.h"
 #include "utils.h"
 
-
 interval M(interval a,interval b)
 {
 	// max{2*sqrt(1+3/a)+|b|,2/(a*|b|)}

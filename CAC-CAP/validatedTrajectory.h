@@ -7,6 +7,7 @@ using namespace std;
 #include "capd/capdlib.h"
 using namespace capd;
 
+//////////////////////////////
 // This routine validates a rigorous enclosure of a trajectory with initial point:
 //   q0+h0*v0
 // which goes above the level L.
@@ -19,6 +20,7 @@ using namespace capd;
 // is a true enclosure of a starting point which goes above L.
 bool validateTrajectoryUp(vector<DVector> p_guess,vector<IVector> &p_validated,interval L,IMap &F,IVector q0,IVector v0,interval &h0);
 
+//////////////////////////////
 // This routine validates a rigorous enclosure of a trajectory with initial point:
 //   q0+h0*v0
 // which goes below the level L.

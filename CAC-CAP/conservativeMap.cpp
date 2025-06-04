@@ -3,7 +3,7 @@
 #include "utils.h"
 
 // This routine returns the formuale of conservative maps considered
-// in the paper.
+// in the paper. 
 string mapFormula(int i)
 {
 	// Below formulae were generated in:

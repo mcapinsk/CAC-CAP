@@ -29,6 +29,7 @@ vector<IVector> split(IVector X)
 	return x;
 }
 
+/////////////////////////////////////////////
 // This function computes:
 //    r[0] = f(p[0])-p[1]
 //    r[1] = f(p[1])-p[2]

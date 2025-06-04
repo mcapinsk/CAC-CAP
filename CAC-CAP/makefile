@@ -2,7 +2,7 @@
 PROGS = CAC-CAP
 
 # a list of all your units to be linked with your programs (space separated)
-OTHERS = validatedTrajectory conservativeMap dissipativeMap nonTwistSF plots
+OTHERS = validatedTrajectory conservativeMap dissipativeMap nonTwistSF
 
 # directory where capd scripts are (e.g. capd-config)
 CAPDBINDIR = ../build/bin/
