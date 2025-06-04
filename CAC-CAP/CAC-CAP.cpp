@@ -121,7 +121,7 @@ interval validateChaosInStandardMapCluster(int Debth)
 		par[i].r = interval(0.005); // how far from the fixed point we use the cone
 		par[i].L = interval(0.01); // initial cone slope
 		par[i].rho = 0.5;
-		par[i].maxIteratesUpDown=40;
+		par[i].maxIteratesUpDown=80;
 	}
 	
 	int done=0;

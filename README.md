@@ -70,7 +70,7 @@ k=1 should result in couple of minutes long computation and should validate 0.69
 
 k=2 should take an hour or two on a desktop computer and should validate 0.92 of the area. 
 
-k=3 should validate 0.98 of the area. This is best done on a cluster, or overnight on a good desktop computer.
+k=3 should validate 0.959 of the area. This is best done on a cluster, or overnight on a good desktop computer.
 
 ## Results
 
