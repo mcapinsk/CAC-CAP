@@ -1,0 +1,53 @@
+======== Table 1 ========
+1. Chaos in the conservative map: (x+y,y+sin(2*pi*(x+y))+c) validated.
+c                   : [-0, -0]
+Initial point       : {0.2647+[-2.942091015e-14, 2.9365399e-14],[-5, -5]}
+Length of trajectory: 11
+
+2. Chaos in the conservative map: (x+y,y+(1-sin(2*pi*(x+y)))*sin(2*pi*(x+y))+c) validated.
+c                   : [0.5, 0.5]
+Initial point       : {0.3695+[-7.605027719e-15, 7.605027719e-15],[-5, -5]}
+Length of trajectory: 15
+
+3. Chaos in the conservative map: (x+y,y+sin(sin(2*pi*(x+y)))/cos(sin(2*pi*(x+y)))+c) validated.
+c                   : [-0, -0]
+Initial point       : {0.5266+[-5.107025913e-15, 4.996003611e-15],[-5, -5]}
+Length of trajectory: 12
+
+4. Chaos in the conservative map: (x+y,y+3*log(2+sin(2*pi*(x+y)))+c) validated.
+c                   : [-1.871465107, -1.871399191]
+Initial point       : {0.4387+[-1.241641394e-05, 1.241641394e-05],[-5, -5]}
+Length of trajectory: 10
+
+5. Chaos in the conservative map: (x+y,-1+y+exp(sin(2*pi*(x+y)))+c) validated.
+c                   : [-0.2660893818, -0.2660423737]
+Initial point       : {0.3693+[-7.016427621e-06, 7.016427621e-06],[-5, -5]}
+Length of trajectory: 12
+
+======== Table 2 ========
+1. Chaos in the conservative map: (x+sin(2*pi*y),y+sin(2*pi*(x+sin(2*pi*y)))+c) validated.
+c                   : [-0, -0]
+Initial point       : {0.4454+[-8.215650382e-15, 8.215650382e-15],[-5, -5]}
+Length of trajectory: 11
+
+2. Chaos in the conservative map: (x+sin(2*pi*y),y+(1-sin(2*pi*(x+sin(2*pi*y))))*sin(2*pi*(x+sin(2*pi*y)))+c) validated.
+c                   : [0.5, 0.5]
+Initial point       : {0.4185+[-3.030353746e-13, 3.030353746e-13],[-5, -5]}
+Length of trajectory: 14
+
+3. Chaos in the conservative map: (x+sin(2*pi*y),y+sin(sin(2*pi*(x+sin(2*pi*y))))/cos(sin(2*pi*(x+sin(2*pi*y))))+c) validated.
+c                   : [-0, -0]
+Initial point       : {0.3332+[-1.110223025e-14, 1.10467191e-14],[-5, -5]}
+Length of trajectory: 7
+
+4. Chaos in the conservative map: (x+sin(2*pi*y),y+3*log(2+sin(2*pi*(x+sin(2*pi*y))))+c) validated.
+c                   : [-1.871465107, -1.871399191]
+Initial point       : {0.4614+[-8.445294198e-06, 8.445294198e-06],[-5, -5]}
+Length of trajectory: 9
+
+5. Chaos in the conservative map: (x+sin(2*pi*y),-1+y+exp(sin(2*pi*(x+sin(2*pi*y))))+c) validated.
+c                   : [-0.2660893818, -0.2660423737]
+Initial point       : {0.3046+[-1.247450259e-05, 1.247450259e-05],[-5, -5]}
+Length of trajectory: 8
+
+Execution time: 0.32871267 seconds
