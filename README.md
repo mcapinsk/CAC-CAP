@@ -52,7 +52,7 @@ with N chosen as an integer. To produce the plot from the paper we have called
 
     nohup ./CAC-CAP 1 1000 > thm_1_3.txt
 
-such computation took over four hours running on 48 parallel threads.
+such computation took over four and a half hours running on 48 parallel threads.
 
 ### To run the proof of Theorem 1.4 choose k from 0 to 3 and call
 
