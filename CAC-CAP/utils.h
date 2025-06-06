@@ -21,6 +21,9 @@ inline double uniformSapmle()
 	return (double)rand()/(double)RAND_MAX;
 }
 
+// This plots the center point of the cartesian product of the 
+// intervals, together with the radii of the intervals: rx, ry. 
+// The rx, ry can be used in gnuplot to plot boxes.
 inline void plot(interval x,interval y,ofstream &file)
 {
 	double rx=(x.rightBound()-x.leftBound())/2;
