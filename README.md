@@ -77,7 +77,9 @@ k=3 should validate 0.9595 of the area. This is best done on a cluster, or overn
 After downloading the files, the results from the computation which we have performed on our clusted will be downloaded to the files
 
 CAC-CAP/CAC-CAP/thm_1_2.txt 
+
 CAC-CAP/CAC-CAP/thm_1_3.txt 
+
 CAC-CAP/CAC-CAP/thm_1_4.txt
 
 and the data files for the plot for the NTSF are downloaded to the folder 
