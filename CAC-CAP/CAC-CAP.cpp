@@ -34,7 +34,7 @@ void producePlotFile(int n_of_threads)
 	file << "set terminal qt" << endl;
 	file << "reset" << endl;
 
-	// removing aur (authors) results which are downloaded from github:
+	// removing (author's) results which are downloaded from github:
 	for(int i=n_of_threads;i<48;i++)
 	{
 		string filename="thm_1_3/NTSF_proof_"+to_string(i)+".txt";
