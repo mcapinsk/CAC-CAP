@@ -82,7 +82,7 @@ CAC-CAP/CAC-CAP/thm_1_3.txt
 
 CAC-CAP/CAC-CAP/thm_1_4.txt
 
-and the data files for the plot for the NTSF are downloaded to the folder 
+and the data files for the plot for the NTSF are included in the folder 
 
 CAC-CAP/CAC-CAP/thm_1_3  
 
