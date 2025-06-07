@@ -74,15 +74,27 @@ k=3 should validate 0.9595 of the area. This is best done on a cluster, or overn
 
 ## Results
 
-The results for Theorems 1.2 and 1.4 will be written out in terminal. The results for Theorem 1.3 are stored in the folder:
+After downloading the files, the results from the computation which we have performed on our clusted will be downloaded to the files
 
-CAC-CAP/CAC-CAP/thm_1_3 
+CAC-CAP/CAC-CAP/thm_1_2.txt 
+CAC-CAP/CAC-CAP/thm_1_3.txt 
+CAC-CAP/CAC-CAP/thm_1_4.txt
 
-which contains the gnuplot files. The plot can be made by calling 
+and the data files for the plot for the NTSF are downloaded to the folder 
+
+CAC-CAP/CAC-CAP/thm_1_3  
+
+The plot can be made by calling 
 
     load 'plotNTSF.txt'
 
 from gnuplot.
+
+When you execute the program the results for Theorems 1.2, 1.3 and 1.4 will be written out in terminal. The gnuplot files in the folder:
+
+CAC-CAP/CAC-CAP/thm_1_3 
+
+will also be updated to the newes executed result. 
 
 ## Suggested order of reading the files
 
