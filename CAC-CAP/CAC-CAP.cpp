@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <omp.h>
+#include <cstdio>
 using namespace std;
 
 #include "capd/capdlib.h"
@@ -32,6 +33,13 @@ void producePlotFile(int n_of_threads)
 	file << "replot" << endl;
 	file << "set terminal qt" << endl;
 	file << "reset" << endl;
+
+	// removing aur (authors) results which are downloaded from github:
+	for(int i=n_of_threads;i<48;i++)
+	{
+		string filename="thm_1_3/NTSF_proof_"+to_string(i)+".txt";
+		std::remove(filename.c_str());
+	}
 }
 
 void validateDiffusionNoTwistSF(int Mesh_Size)
@@ -89,8 +97,10 @@ void validateDiffusionNoTwistSF(int Mesh_Size)
 				done++;
 				cout << done/100.0 << endl;
 			}
+		}else{
+			done++;
+			cout << done/double(Na) << endl;
 		}
-		
 	}
 	int total=0;
 	for(int i=0;i<N_of_threads;i++) total=total+counter[i];
