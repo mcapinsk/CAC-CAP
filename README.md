@@ -1,5 +1,5 @@
 # CAC-CAP
-The proof of chaos in the Standarc Family. The proof is based on the CAPD library:
+The proof of chaos in the Standard Family is based on the CAPD library:
 
 CAPD main webpage: http://capd.ii.uj.edu.pl
 
@@ -29,7 +29,7 @@ Enter the repository, create the build folder, configure the library and then bu
 
 The above commands will build only the CAPD library.
 
-For detailed description on how to build the library see
+For a detailed description on how to build the library see
 
 http://capd.ii.uj.edu.pl/html/capd_compilation.html
 
@@ -52,7 +52,7 @@ with N chosen as an integer. To produce the plot from the paper we have called
 
     nohup ./CAC-CAP 1 1000 > thm_1_3.txt
 
-such computation took over four and a half hours running on 48 parallel threads.
+This computation took over four and a half hours running on 48 parallel threads.
 
 ### To run the proof of Theorem 1.4 choose k from 0 to 3 and call
 
@@ -87,13 +87,13 @@ from gnuplot.
 ## Suggested order of reading the files
 
 - validatedTrajectory.h/cpp
-These files contain a method for validating that a strategy goes above or below a prescribed level. The validation is performed by means of the Krawczyk parallel shooting method.
+These files contain a method for validating that a trajectory goes above or below a prescribed level. The validation is performed by means of the Krawczyk parallel shooting method.
 
 - conservativeMap.h/cpp
 These files contain a computer assisted proof of chaos for conservative maps. The routine validateChaosInConservativeMaps() provides a computer assisted proof of Theorem 1.2 from the paper.
 
 - nonTwistSF.h/cpp
-These files contain a computer assisted proof of Theorem 1.3. from the paper. 
+These files contain a computer assisted proof of Theorem 1.3 from the paper. 
 
 - dissipativeMap.h/cpp
 These files contain the proof of Theorem 1.4.
