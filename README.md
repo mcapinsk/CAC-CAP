@@ -81,7 +81,7 @@ CAC-CAP/CAC-CAP/thm_1_3.txt
 
 CAC-CAP/CAC-CAP/thm_1_4.txt
 
-and the data files for the plot for the NTSF are included in the folder 
+The data files for the plot for the NTSF are included in the folder 
 
 CAC-CAP/CAC-CAP/thm_1_3  
 
@@ -104,6 +104,7 @@ from gnuplot.
 When you execute the program the results for Theorems 1.2, 1.3 and 1.4 will be written out in terminal. The gnuplot files in the folders:
 
 CAC-CAP/CAC-CAP/thm_1_3 
+
 CAC-CAP/CAC-CAP/thm_1_4
 
 will also be updated to the newes executed result. 
