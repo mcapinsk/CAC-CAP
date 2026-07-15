@@ -1,0 +1,13 @@
+set xrange [0:0.81]
+set yrange [0.95:1.005]
+set xtics 0,0.1,0.8
+set ytics 0.95,0.01,1
+
+plot 'dissipative-area.txt' w l lc rgb 'black' t ''
+
+set terminal pdf enhanced size 10cm,5cm font "Helvetica,12”
+set output "dissipative-area.pdf"
+replot
+set terminal qt
+
+reset

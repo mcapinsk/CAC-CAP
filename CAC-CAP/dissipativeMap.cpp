@@ -105,41 +105,61 @@ IVector IStandardMap::FixedPoint(int i)
 	return IVector({x,y}); // when i=1 we return (x_{kappa}, y_{kappa})
 }
 
-/////////////////////////////
-
-localMap::localMap(IVector x0_,IVector x1_,IMatrix A_,IMatrix Ainv_,IDissipativeMap &f_)
-{
-	x0=x0_; x1=x1_;
-	A=A_; Ainv=Ainv_;
-	f=&f_;
-}
-
-/////////////////////////////
-// This routine computes a matrix A such that:
-// for
-//    x = FixedPoint
-// and
-//    D = Df(x)
-// the matrix 
-//    A^{-1}*D*A
-// is diagonal, and the unstable local coordinate is on the x-axis. 
-DMatrix getLocalCoordinates(DDissipativeMap &f,int i)
+DVector unstableVector(DStandardMap &f,int i)
 {
 	DVector x=f.FixedPoint(i);
 	DMatrix D=f[x];
 	DVector rE(2), iE(2);
 	DMatrix rVec(2,2), iVec(2,2);
 	computeEigenvaluesAndEigenvectors(D,rE,iE,rVec,iVec);
-	return rVec;
+
+	DVector v(2);
+	v[0]=rVec[0][0];
+	v[1]=rVec[1][0];
+
+	double lambda = rE[0];
+	double V=sqrt(v[0]*v[0]+v[1]*v[1]);
+	double scaling=0.1/(V*lambda);
+
+	return scaling*v;
 }
 
-DVector unstableVector(DDissipativeMap &f,int i)
+////////////////////////////////
+// Here we consider a sector
+//    S = {x0+s*v : s \in [0,h]} 
+// and validate that
+//    F(S) \subset F(x0) + [-0.5,0.5] x [-1,1]
+bool sectorInclusion(IStandardMap &F,IVector v,interval h,int i)
 {
-	DMatrix A=getLocalCoordinates(f,i);
-	DVector v(2);
-	v[0]=A[0][0];
-	v[1]=A[1][0];
-	return v;
+	IVector x0=F.FixedPoint(i);
+
+	int kappa = F.get_kappa();
+	IVector Fx0(2);
+
+	// if i=0 then x0 = (x_{-kappa}, y_{-kappa})
+	// and F(x0) = x0 - (kappa,0)
+	if(i==0) Fx0 = x0 - IVector({interval(kappa),0});
+
+	// if i=1 when x0 = (x_{kappa}, y_{kappa})
+	// and F(x0) = x0 + (kappa,0)
+	if(i==1) Fx0 = x0 + IVector({interval(kappa),0});
+
+	// We choose a set Bkappa
+	// which we are sure will be contained in
+	// F(x0) + [-0.5,0.5] x [-1,1]
+	IVector Bkappa(2);
+	Bkappa[0] = intervalHull(Fx0[0].right()-0.49,Fx0[0].left()+0.49);
+	Bkappa[1] = intervalHull(Fx0[1].right()-0.99,Fx0[1].left()+0.99);
+
+	// We consider S = {x0+s*v : s \in [0,h]}.
+	// We use the mean value theorem:
+	//    F(x0+s*v) \in F(x0) + [DF]*v*[0,h]
+	// where [DF] is the interval arithmetic bound on DF(S).
+	interval H=intervalHull(interval(0),h);
+	IVector FS = Fx0 + H*(F[x0+H*v]*v);	
+
+	if(subsetInterior(FS,Bkappa)) return true;
+	return false;
 }
 
 // Here we take a fixed point 
@@ -147,13 +167,13 @@ DVector unstableVector(DDissipativeMap &f,int i)
 // we consider its unstable eigevector 
 //    v=unstableVector
 // we take 
-//    vl[0] = x-r*v
-//    vr[0] = x+r*v
+//    vl[0] = x-h*v
+//    vr[0] = x+h*v
 // we compute 
 //    vl[i+1] = f(vl[i])
 //    vr[i+1] = f(vr[i])
 // until we exit the required domain (go below or above B).
-vector<DVector> outTrajectory(DDissipativeMap &f,int maxIteratesUpDown,double B,double r,int i,int &side,int UpDown)
+vector<DVector> outTrajectory(DStandardMap &f,int maxIteratesUpDown,double B,int i,int &side,int UpDown,double h)
 {
 	DVector x=f.FixedPoint(i);
 
@@ -161,8 +181,8 @@ vector<DVector> outTrajectory(DDissipativeMap &f,int maxIteratesUpDown,double B,
 
 	DVector v=unstableVector(f,i);
 
-	vl.push_back(x-r*v); 
-	vr.push_back(x+r*v);
+	vl.push_back(x-h*v); 
+	vr.push_back(x+h*v);
 	
 	for(int i=0;i<maxIteratesUpDown;i++)
 	{
@@ -204,158 +224,84 @@ vector<DVector> outTrajectory(DDissipativeMap &f,int maxIteratesUpDown,double B,
 }
 
 // This computes the guess for a trajectory that will go up
-vector<DVector> upTrajectory(DDissipativeMap &f,int maxIteratesUpDown,double B,double r,int i,int &side)
+vector<DVector> upTrajectory(DStandardMap &f,int maxIteratesUpDown,double B,int i,int &side,double h)
 {
-	return outTrajectory(f,maxIteratesUpDown,B,r,i,side,1);
+	return outTrajectory(f,maxIteratesUpDown,B,i,side,1,h);
 }
+
 // This computes the guess for a trajectory that will go down
-vector<DVector> downTrajectory(DDissipativeMap &f,int maxIteratesUpDown,double B,double r,int i,int &side)
+vector<DVector> downTrajectory(DStandardMap &f,int maxIteratesUpDown,double B,int i,int &side,double h)
 {
-	return outTrajectory(f,maxIteratesUpDown,B,r,i,side,-1);
+	return outTrajectory(f,maxIteratesUpDown,B,i,side,-1,h);
 }
 
-////////////////////////////
-// Here we check cone conditions.
-// The cone C is an initial guess for a cone that will map to itself. 
-// The function refines the initial guess for the cone (1,[-L,L]). 
-// If the function returns 1, then C will store a sharper cone than the 
-// initial guess (1,[-L,L]), for which we have cone conditions.
-bool validateCone(localMap &f,interval r,interval L,IVector &C)
+// This function validates the conditions (I-VIII) for the 
+// StandardMap F. The map F can have parameters (a,b) chosen as intervals.
+bool validateChaos(IStandardMap &F,DStandardMap &Fd,chaosProofParameters par,int &NofIterates)
 {
-	IVector v({interval(1),L*interval(-1,1)}); // this is the initial guess for a cone
-	IVector x(2);
-	// here we iterate  the image of the cone ten times by the derivative
-	// to refine the initial guess.
-	for(int i=0;i<10;i++) 
-	{
-		x=r*interval(-1,1)*v;
-		v=f[x]*v;
-		v[1]=interval(-1,1)*v[1]/v[0].left();
-		v[0]=interval(1);
-	}
-
-	// We enlarge the guess:
-	v[1]=1.1*v[1];
-	v[0]=interval(1);
-	// We take a neighbourhood which contains the cone with radius r:
-	x=r*interval(-1,1)*v;
-
-	// we compute the bound for the image of the cone
-	IVector w=f[x]*v;
-	// We normalise the result
-	w[1]=interval(-1,1)*w[1]/w[0].left();
-
-	// we check cone conditions
-	if(! subsetInterior(w[1],v[1])) 
-	{
-		return 0; // this means that cone conditions failed.
-	}
-	// we check expansion inside of a cone:
-	if(! (abs(w[0])>interval(1.0)))
-	{
-		return 0;
-	}
-	C=v; // the C will now pass the validated cone outside of the function
-	return 1; // success
-}
-
-
-
-bool validateChaos(IDissipativeMap &F,DDissipativeMap &Fd,chaosProofParameters par,int &NofIterates,int &failureReason)
-{
-	interval r=par.r;
 	interval B=par.B;
-	interval L=par.L;
-	double rho=par.rho;
 	int maxIteratesUpDown=par.maxIteratesUpDown;
-
-	// While performing tests we wanted to know how many iterates we used.
-	// This was computed just out of curiosity. The computed length of the 
-	// validated trajectory is not needed for the proof.
-	NofIterates=0; 
 
 	// We check if we go from fixedPoint(i) above and below for i=0,1
 	for(int i=0;i<2;i++)
 	{
-		int sideU=0, sideD=0;
-		interval h0=rho*r;
-		// computation of an initial guess of a trajectory that goes up:
-		vector<DVector> qU=upTrajectory(Fd,maxIteratesUpDown,toDouble(B),toDouble(h0),i,sideU);
-		if(sideU==0) // this means that there is no trajectory shorter than maxIteratesUpDown that goes up
+		interval h=2.0;
+		bool success=false;
+		for(int j=0;j<3;j++)
 		{
-			if((failureReason==0) or (failureReason==1)) failureReason=1;
-			return 0;
-		}
-
-		// computation of an initial guess of a trajectory that goes down:
-		vector<DVector> qD=downTrajectory(Fd,maxIteratesUpDown,-toDouble(B),toDouble(h0),i,sideD);
-		if(sideD==0) // if this is the case we have failed
-		{
-			if((failureReason==0) or (failureReason==1)) failureReason=1;
-			return 0;
-		}
+			if(success==true) continue;
+			
+			h=h/2;
+			int sideU=0, sideD=0;
+			// computation of an initial guess of a trajectory that goes up:
+			vector<DVector> qU=upTrajectory(Fd,maxIteratesUpDown,toDouble(B),i,sideU,h.leftBound());
+			if(sideU==0) continue; // this means that there is no trajectory shorter than maxIteratesUpDown that goes up
+			
+			// computation of an initial guess of a trajectory that goes down:
+			vector<DVector> qD=downTrajectory(Fd,maxIteratesUpDown,-toDouble(B),i,sideD,h.leftBound());
+			if(sideD==0) continue; // if this is the case we have failed
 		
-		// We check the largest number of iterates needed. This is just out of curiosity.
-		// This is not essential for the proof.
-		if(NofIterates<(int)qU.size()-1) NofIterates=qU.size()-1;
-		if(NofIterates<(int)qD.size()-1) NofIterates=qD.size()-1;
+			IVector q0=F.FixedPoint(i);
+			IVector vU=IVector({qU[0][0],qU[0][1]})-q0;
+			IVector vD=IVector({qD[0][0],qD[0][1]})-q0;
 
-		// We compute the local coordinates dor the local map
-		IMatrix A=toInterval(getLocalCoordinates(Fd,i));
-		IVector x0=F.FixedPoint(i);
-		IVector x1=F(x0); 
-		IMatrix Ainv=gaussInverseMatrix(A);
+			vector<IVector> qU_validated, qD_validated;
 
-		localMap f(x0,x1,A,Ainv,F);
-		IVector v0(2);
-		if(validateCone(f,r,L,v0)==0)
-		{
-			failureReason=2;
-			return 0;
+			interval h0=1.0;
+
+			// Below, validateTrajectoryDown() computes h0 and validates that a trajectory starting from
+			//    q0+h0*vD
+			// goes below -B.
+			if(validateTrajectoryDown(qD,qD_validated,-B,*(F.map),q0,vD,h0)==0)	continue;
+			// We consider
+			//    S = {q0+s*vD : s \in [0,h0]}
+			// and validate that F(S) \subset F(q0) + [-0.5,0.5] x [-1,1].
+			if(sectorInclusion(F,vD,h0,i)==0) continue;
+
+			h0 = 1.0;
+
+			// Below, validateTrajectoryUp() computes h0 and validates that a trajectory starting from
+			//    q0+h0*vU
+			// goes above B.
+			if(validateTrajectoryUp(qU,qU_validated,B,*(F.map),q0,vU,h0)==0) continue;
+			// We consider
+			//    S = {q0+s*vU : s \in [0,h0]}
+			// and validate that F(S) \subset F(q0) + [-0.5,0.5] x [-1,1].
+			if(sectorInclusion(F,vU,h0,i)==0) continue;
+
+			// We check the largest number of iterates needed. This is just out of curiosity.
+			// This is not essential for the proof.
+			if(NofIterates<(int)qU.size()-1) NofIterates=qU.size()-1;
+			if(NofIterates<(int)qD.size()-1) NofIterates=qD.size()-1;
+			success = true;
 		}
-		// v0 is of the form v0=(v0_x,v0_y)=(1,[-c,c])
-		// this means that 
-		v0=f.get_A()*v0;
-
-		// We point the cones in the directions of the trajectories:
-		IVector vU=sideU*v0;
-		IVector vD=sideD*v0;
-
-		IVector q0=F.FixedPoint(i);
-
-		vector<IVector> qU_validated, qD_validated;
-
-		if(validateTrajectoryDown(qD,qD_validated,-B,*(F.map),q0,vD,h0)==0)
-		{
-			// the "failureReason" was added in order to tweak parameters.
-			// Knowing why things failed is not needed for the proof.
-			failureReason=3; 
-			return 0;
-		}
-		// we make sure that q0+h0*vD is inside of the cone q0+[0,r]*vD
-		if(not(r>h0))
-		{
-			failureReason=4;
-			return 0;
-		} 
-
-		h0 = rho*r;
-		if(validateTrajectoryUp(qU,qU_validated,B,*(F.map),q0,vU,h0)==0)
-		{
-			failureReason=3;
-			return 0;
-		}
-		// we make sure that q0+h0*vU is inside of the cone q0+[0,r]*vU
-		if(not(r>h0))
-		{
-			failureReason=4;
-			return 0;
-		}
+		if(success==false) return 0;
 	}
+
 	return 1;
 }
 
-bool validateChaosStandardMap(IStandardMap &F,DStandardMap &Fd,chaosProofParameters par,int &NofIterates,int &failureReason)
+bool validateChaosStandardMap(IStandardMap &F,DStandardMap &Fd,chaosProofParameters par,int &NofIterates)
 {
 	int kappaMax=0.9999*F.get_a().leftBound()/(1.0-F.get_b().leftBound());
 	// We try to validate the needed conditions for various kappa:
@@ -363,19 +309,13 @@ bool validateChaosStandardMap(IStandardMap &F,DStandardMap &Fd,chaosProofParamet
 	{
 		F.set_kappa(kappa);
 		Fd.set_kappa(kappa);
-		if(validateChaos(F,Fd,par,NofIterates,failureReason)==1) return 1;
+		if(validateChaos(F,Fd,par,NofIterates)==1) return 1;
 	}
 	return 0;
 }
 
-bool validateChaosStandardMap(IStandardMap &F,DStandardMap &Fd,chaosProofParameters par)
-{
-	int NofIterates, failureReason;
-	return validateChaosStandardMap(F,Fd,par,NofIterates,failureReason);
-}
-
 // We validate the area in the parameter box a \times b for which we have chaos.
-interval chaoticArea(IStandardMap &F,DStandardMap &Fd,interval a,interval b,chaosProofParameters &par,int Try,int Debth)
+interval chaoticArea(IStandardMap &F,DStandardMap &Fd,interval a,interval b,chaosProofParameters &par,int Try,int Debth,int &NofIterates)
 {
 	if(Try-1==Debth) return interval(0); // this means that we no longer check. 
 	F.set_a(a);
@@ -384,7 +324,7 @@ interval chaoticArea(IStandardMap &F,DStandardMap &Fd,interval a,interval b,chao
 	Fd.set_b(toDouble(b));
 	par.B=(interval(1.0)/(interval(1.0)-b)).right();
 
-	if(validateChaosStandardMap(F,Fd,par)==1)
+	if(validateChaosStandardMap(F,Fd,par,NofIterates)==1)
 	{
 		return (a.right()-a.left())*(b.right()-b.left());
 	}else // we subdivide the box a \times b into 25 pieces and try again on each of them:
@@ -397,19 +337,19 @@ interval chaoticArea(IStandardMap &F,DStandardMap &Fd,interval a,interval b,chao
 			for(int k=0;k<N;k++)
 			{
 				interval beta=part(b,N,k);
-				Area = Area + chaoticArea(F,Fd,alpha,beta,par,Try+1,Debth);
+				Area = Area + chaoticArea(F,Fd,alpha,beta,par,Try+1,Debth,NofIterates);
 			} 
 		}
 		return Area;
 	}
 }
 
-interval chaoticArea(IStandardMap &F,DStandardMap &Fd,interval a,interval b,chaosProofParameters &par,int Debth)
+interval chaoticArea(IStandardMap &F,DStandardMap &Fd,interval a,interval b,chaosProofParameters &par,int Debth,int &NofIterates)
 {
 	// we start with zero attempts, as the chaoticArea() is recursively
 	// iterated the Try=0 will be increased until it reaches the max number of iterations
 	// indicated by Debth.
-	return chaoticArea(F,Fd,a,b,par,0,Debth);
+	return chaoticArea(F,Fd,a,b,par,0,Debth,NofIterates);
 }
 
 

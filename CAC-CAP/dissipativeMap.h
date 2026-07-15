@@ -38,7 +38,6 @@ public:
 	DVector operator()(const DVector &x) const {return (*map)(x);}
 	DMatrix operator[](const DVector &x) const {return (*map)[x];}
 
-	virtual DVector FixedPoint(int i)=0;
 	virtual ~DDissipativeMap(){delete map;}
 };
 
@@ -87,8 +86,6 @@ public:
 	IMatrix operator[](const IVector &x) const {return (*map)[x];}
 
 	virtual ~IDissipativeMap(){delete map;}
-
-	virtual IVector FixedPoint(int i)=0;
 };
 
 // This class is an interval arithmetic version of the class DStandardMap.
@@ -116,32 +113,6 @@ public:
 
 /////////////////////////////////////////
 
-// This map is used to compute the derivative in clocal coordinates.
-// Its main purpose is for the validation of cone conditions.
-// We consider a map f:R^n -> R^n, an n x n matrix A, and two points x0,x1. 
-// The map f in local coordinates is given as
-//     x-> Ainv*(f(x0+A*x)-x1).
-// The class is used to compute the image and the derivative of this map in 
-// the local coordinates.
-class localMap
-{
-private:
-	IMatrix A,Ainv;
-	IVector x0,x1;
-	IDissipativeMap *f;
-public:
-	IMatrix get_A(){return A;}
-	IVector image(IVector x){return Ainv*((*f)(x0+A*x)-x1);}
-	IMatrix derivative(IVector x){return Ainv*(*f)[x0+A*x]*A;}
-
-	localMap(IVector x0,IVector x1,IMatrix A,IMatrix Ainv,IDissipativeMap &f);
-	
-	IVector operator()(IVector x){return image(x);}
-	IMatrix operator[](IVector x){return derivative(x);}
-};
-
-/////////////////////////////////////////
-
 // Ihe parallel shooting Krawczyk operator depend on a number of parameters.
 // We bundle them in a single class. This class serves as a container of these 
 // parameters.
@@ -149,9 +120,6 @@ class chaosProofParameters
 {
 public:
 	interval B; // level to go above/below (for below we take -B)
-	interval r; // how far from the fixed point we use the cone
-	interval L; // initial cone slope
-	double rho; // where position the curve at the end of the cone
 	int maxIteratesUpDown; // the maximal length of trajectory we search for
 };
 
@@ -167,6 +135,6 @@ public:
 // - The map F is used to validate the needed trajectories and segments
 // - The map Fd is used to perform non-rigorous simulations to find the
 //   candidates for the appropriate trajectories to be validated.
-interval chaoticArea(IStandardMap &F,DStandardMap &Fd,interval a,interval b,chaosProofParameters &par,int Debth);
+interval chaoticArea(IStandardMap &F,DStandardMap &Fd,interval a,interval b,chaosProofParameters &par,int Debth,int &NofIterates);
 
 #endif

@@ -54,27 +54,26 @@ with N chosen as an integer. To produce the plot from the paper we have called
 
 This computation took over four and a half hours running on 48 parallel threads.
 
-### To run the proof of Theorem 1.4 choose k from 0 to 3 and call
+### To run the proof of Theorem 1.4 choose k from 0 to 2 and call
 
     ./CAC-CAP 2 k
 
 For the result from the paper we have called
 
-    nohup ./CAC-CAP 2 3 > thm_1_4.txt
+    nohup ./CAC-CAP 2 2 > thm_1_4.txt
 
 For different k we can obtain different accuracy:
 
-k=0 gives a short computation and should validate 0.28 of the area.
+k=0 gives a short computation and should validate 0.443 of the area.
 
-k=1 should result in couple of minutes long computation and should validate 0.69 of the area. 
+k=1 should result in under an hour long computation and should validate 0.918 of the area. 
 
-k=2 should take an hour or two on a desktop computer and should validate 0.92 of the area. 
+k=2 should take an hour or two on a desktop computer and should validate 0.9975 of the area. (Our computation took under 12 minutes running on 48 threads.)
 
-k=3 should validate 0.9595 of the area. This is best done on a cluster, or overnight on a good desktop computer.
 
 ## Results
 
-After downloading the files, the results from the computation which we have performed on our clusted will be downloaded to the files
+After downloading the code files, the results from the computation which we have performed on our clusted will be appear in the files
 
 CAC-CAP/CAC-CAP/thm_1_2.txt 
 
@@ -92,9 +91,20 @@ The plot can be made by calling
 
 from gnuplot.
 
-When you execute the program the results for Theorems 1.2, 1.3 and 1.4 will be written out in terminal. The gnuplot files in the folder:
+The data files for the plot for the dissipative case are included in the folder 
+
+CAC-CAP/CAC-CAP/thm_1_4
+
+The plot can be made by calling 
+
+    load 'plot.txt'
+
+from gnuplot.
+
+When you execute the program the results for Theorems 1.2, 1.3 and 1.4 will be written out in terminal. The gnuplot files in the folders:
 
 CAC-CAP/CAC-CAP/thm_1_3 
+CAC-CAP/CAC-CAP/thm_1_4
 
 will also be updated to the newes executed result. 
 
